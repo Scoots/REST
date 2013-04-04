@@ -2,3 +2,5 @@
 *.pyo
 *.suo
 _ReSharper*
+*.user
+*.Cache
