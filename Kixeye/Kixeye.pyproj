@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{cf994735-6068-410a-8107-995477a51455}</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>Kixeye.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>Kixeye</Name>
+    <RootNamespace>"Kixeye\"</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Kixeye.py" />
+    <Compile Include="RequestObjects\CreateBattleLogRequest.py" />
+    <Compile Include="RequestObjects\CreateUserRequest.py" />
+    <Compile Include="RequestObjects\ModifyUserRequest.py" />
+    <Compile Include="ResponseObjects\CreateBattleLogResponse.py" />
+    <Compile Include="ResponseObjects\CreateUserResponse.py" />
+    <Compile Include="ResponseObjects\ModifyUserResponse.py" />
+    <Compile Include="REST.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ResponseObjects\" />
+    <Folder Include="RequestObjects\" />
+    <Folder Include="Backend\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+</Project>
