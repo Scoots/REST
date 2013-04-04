@@ -1,3 +1,5 @@
+import json
+
 class CreateBattleLogRequest(object):
 
   """ This class will contain all of the information that is used for a CreateBattleLog request """
@@ -17,9 +19,26 @@ class CreateBattleLogRequest(object):
     self.m_startTime = start
     self.m_endTime = end
 
-  def PrintJSON(self):
-    print self.m_attacker
-    print self.m_defender
-    print self.m_winner
-    print self.m_startTime
-    print self.m_endTime
+  def GetJSON(self):
+    print json.dumps(
+                      {
+                        'attacker': self.m_attacker,
+                        'defender': self.m_defender,
+                        'winner': self.m_winner,
+                        'start': self.m_startTime,
+                        'end': self.m_endTime
+                      },
+                      sort_keys=True,
+                      indent=4,
+                      separators=(',', ': '))
+    return json.dumps(
+                      {
+                        'attacker': self.m_attacker,
+                        'defender': self.m_defender,
+                        'winner': self.m_winner,
+                        'start': self.m_startTime,
+                        'end': self.m_endTime
+                      },
+                      sort_keys=True,
+                      indent=4,
+                      separators=(',', ': '))

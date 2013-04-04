@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{cf994735-6068-410a-8107-995477a51455}</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Kixeye.py</StartupFile>
+    <StartupFile>UnitTests.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,6 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Backend\DBCommunicator.py" />
     <Compile Include="Kixeye.py" />
     <Compile Include="RequestObjects\CreateBattleLogRequest.py" />
     <Compile Include="RequestObjects\CreateUserRequest.py" />
@@ -30,6 +31,7 @@
     <Compile Include="ResponseObjects\CreateUserResponse.py" />
     <Compile Include="ResponseObjects\ModifyUserResponse.py" />
     <Compile Include="REST.py" />
+    <Compile Include="UnitTests.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ResponseObjects\" />

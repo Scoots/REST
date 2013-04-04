@@ -1,0 +1,4 @@
+*.pyc
+*.pyo
+*.suo
+_ReSharper*

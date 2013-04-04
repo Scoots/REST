@@ -1,3 +1,5 @@
+import json
+
 class CreateUserRequest(object):
   """ This class will contain all of the information that is used for a CreateUser request """
   """ Based on its members it will create its own JSON POST parameters """
@@ -12,7 +14,22 @@ class CreateUserRequest(object):
     self.m_lastName = last
     self.m_nickname = nick
 
-  def PrintJSON(self):
-    print self.m_firstName
-    print self.m_lastName
-    print self.m_nickname
+  def GetJSON(self):
+    print json.dumps(
+                      {
+                        'first': self.m_firstName,
+                        'last': self.m_lastName,
+                        'nickname': self.m_nickname
+                      },
+                      sort_keys=True,
+                      indent=4,
+                      separators=(',', ': '))
+    return json.dumps(
+                      {
+                        'first': self.m_firstName,
+                        'last': self.m_lastName,
+                        'nickname': self.m_nickname
+                      },
+                      sort_keys=True,
+                      indent=4,
+                      separators=(',', ': '))
