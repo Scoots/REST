@@ -1,6 +1,10 @@
 from RequestObjects.CreateUserRequest import CreateUserRequest
 from RequestObjects.ModifyUserRequest import ModifyUserRequest
 from RequestObjects.CreateBattleLogRequest import CreateBattleLogRequest
+from RequestObjects.CreateBattleLogRequest2 import CreateBattleLogRequest2
+from ResponseObjects.CreateUserResponse import CreateUserResponse
+from ResponseObjects.ModifyUserResponse import ModifyUserResponse
+from ResponseObjects.CreateBattleLogResponse import CreateBattleLogResponse
 from Backend.DBCommunicator import DBCommunicator
 import json
 
@@ -28,84 +32,105 @@ class REST:
   # Takes a CreateUserRequest and returns a CreateUserResponse
   #-----------------------------------------------------------------------
   def CreateUser(self, userRequest):
+    # Check if we are authenticated
     if not self.__m_authenticated:
-      # Log and throw error
       print "Not authenticated"
+      returnObj = CreateUserResponse()
       returnObj.m_errorDescription = "ERROR_NOT_AUTHENTICATED"
       return returnObj
 
+    # Check if we have the appropriate request
     if not type(userRequest) == CreateUserRequest:
       # Log and throw error
       print "Invalid type, was not a CreateUserRequest"
+      returnObj = CreateUserResponse()
       returnObj.m_errorDescription = "ERROR_INVALID_TYPE"
       return returnObj
 
+    # Get our JSON parameters and our headers
     params = userRequest.GetJSON()
     headers = {"Content-type": "application/json"}
 
     # Send the JSON request, wait for the response and return it
     #success, connection = self.__m_dbCommunicator.SendWebRequest("POST", __m_BaseURL + "/users", params, headers)
-    #response = connection.getresponse()
-    returnObj = CreateUserResponse()
-    #if response.status == 200: # This means it was successful
-      #parse the data here
-      #returnObj.GetFromJSON(data)
-    return returnObj
+    success = True
+    # If the web request failed, report an error
+    if not success:
+      returnObj = CreateUserResponse()
+      returnObj.m_errorDescription = "ERROR_FAILED_TO_CALL_METHOD"
+      return returnObj
+
+    # Return the response object
+    return CreateUserResponse()#connection.getresponse())
 
   #-----------------------------------------------------------------------
   # CreateUser function
   # Takes a ModifyUserRequest and returns a ModifyUserResponse
   #-----------------------------------------------------------------------
   def ModifyUser(self, userRequest):
+    # Check if we are authenticated
     if not self.__m_authenticated:
-      # Log and throw error
       print "Not authenticated"
+      returnObj = ModifyUserResponse()
       returnObj.m_errorDescription = "ERROR_NOT_AUTHENTICATED"
       return returnObj
 
+    # Check if we have the appropriate request
     if not type(userRequest) == ModifyUserRequest:
       # Log and throw error
-      print "Invalid type, was not a ModifyUserRequest"
+      print "Invalid type, was not a CreateUserRequest"
+      returnObj = ModifyUserResponse()
       returnObj.m_errorDescription = "ERROR_INVALID_TYPE"
       return returnObj
 
+    # Get our JSON parameters and our headers
     params = userRequest.GetJSON()
     headers = {"Content-type": "application/json"}
 
     # Send the JSON request, wait for the response and return it
-    #self.__m_dbCommunicator.SendWebRequest("PUT",__m_BaseURL + "/users/" + str(userRequest.m_user), params, headers)
-    #response = connection.getresponse()
-    returnObj = ModifyUserResponse()
-    #if response.status == 200: # This means it was successful
-      #parse the data here
-      #returnObj.GetFromJSON(data)
-    return returnObj
+    #success, connection = self.__m_dbCommunicator.SendWebRequest("POST", __m_BaseURL + "/users", params, headers)
+    success = True
+    # If the web request failed, report an error
+    if not success:
+      returnObj = ModifyUserResponse()
+      returnObj.m_errorDescription = "ERROR_FAILED_TO_CALL_METHOD"
+      return returnObj
+
+    # Return the response object
+    return ModifyUserResponse()#connection.getresponse())
   
   #-----------------------------------------------------------------------
   # CreateBattleLog function
   # Takes a CreateBattleLogRequest and returns a CreateBattleLogResponse
   #-----------------------------------------------------------------------
   def CreateBattleLog(self, userRequest):
-    returnObj = CreateBattleLogResponse()
+    # Check if we are authenticated
     if not self.__m_authenticated:
-      # Log and throw error
       print "Not authenticated"
+      returnObj = CreateBattleLogResponse()
       returnObj.m_errorDescription = "ERROR_NOT_AUTHENTICATED"
       return returnObj
 
+    # Check if we have the appropriate request
     if not type(userRequest) == CreateBattleLogRequest:
       # Log and throw error
-      print "Invalid type, was not a CreateBattleLogRequest"
+      print "Invalid type, was not a CreateUserRequest"
+      returnObj = CreateBattleLogResponse()
       returnObj.m_errorDescription = "ERROR_INVALID_TYPE"
       return returnObj
 
+    # Get our JSON parameters and our headers
     params = userRequest.GetJSON()
     headers = {"Content-type": "application/json"}
 
     # Send the JSON request, wait for the response and return it
-    #self.__m_dbCommunicator.SendWebRequest("POST", __m_BaseURL + "/battles", params, headers)
-    #response = connection.getresponse()
-    #if response.status == 200: # This means it was successful
-      #parse the data here
-      #returnObj.GetFromJSON(data)
-    return returnObj
+    #success, connection = self.__m_dbCommunicator.SendWebRequest("POST", __m_BaseURL + "/users", params, headers)
+    success = True
+    # If the web request failed, report an error
+    if not success:
+      returnObj = CreateBattleLogResponse()
+      returnObj.m_errorDescription = "ERROR_FAILED_TO_CALL_METHOD"
+      return returnObj
+
+    # Return the response object
+    return CreateBattleLogResponse()#connection.getresponse())

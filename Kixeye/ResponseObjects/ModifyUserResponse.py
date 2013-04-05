@@ -1,3 +1,5 @@
+import json
+
 class ModifyUserResponse(object):
   """ The object that is returned from a ModifyUserRequest """
 
@@ -7,7 +9,17 @@ class ModifyUserResponse(object):
   m_time = None
   m_errorDescription = "No JSON supplied"
 
-  def GetFromJSON(JSONString):
-    # Take a string and set the variables appropriately
-    m_error = true
+  def __init__(self, JSONStr = ""):
+    # In this case we made this object to report an error
+    if JSONStr == "":
+      return
+
+    content = json.loads(str(JSONStr))
+    for key, value in content.iteritems():
+      if key == "error":
+        self.m_error = value
+      elif key == "time":
+        self.m_time = value
+      elif key == "msg":
+        self.m_errorDescription = value
 
