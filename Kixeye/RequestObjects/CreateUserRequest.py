@@ -5,31 +5,15 @@ class CreateUserRequest(object):
   """ Based on its members it will create its own JSON POST parameters """
 
   # Members required for sending a CreateUserRequest
-  m_firstName = None
-  m_lastName = None
-  m_nickname = None
+  first = None
+  last = None
+  nickname = None
 
   def __init__(self, first, last, nick):
-    self.m_firstName = first
-    self.m_lastName = last
-    self.m_nickname = nick
+    self.first = first
+    self.last = last
+    self.nickname = nick
 
   def GetJSON(self):
-    print json.dumps(
-                      {
-                        'first': self.m_firstName,
-                        'last': self.m_lastName,
-                        'nickname': self.m_nickname
-                      },
-                      sort_keys=True,
-                      indent=4,
-                      separators=(',', ': '))
-    return json.dumps(
-                      {
-                        'first': self.m_firstName,
-                        'last': self.m_lastName,
-                        'nickname': self.m_nickname
-                      },
-                      sort_keys=True,
-                      indent=4,
-                      separators=(',', ': '))
+    print json.dumps(self.__dict__)
+    return json.dumps(self.__dict__)

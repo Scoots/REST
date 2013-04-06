@@ -23,13 +23,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Backend\DBCommunicator.py" />
+    <Compile Include="Backend\__init__.py" />
     <Compile Include="Kixeye.py" />
     <Compile Include="RequestObjects\CreateBattleLogRequest.py" />
     <Compile Include="RequestObjects\CreateUserRequest.py" />
     <Compile Include="RequestObjects\ModifyUserRequest.py" />
+    <Compile Include="RequestObjects\__init__.py" />
     <Compile Include="ResponseObjects\CreateBattleLogResponse.py" />
     <Compile Include="ResponseObjects\CreateUserResponse.py" />
     <Compile Include="ResponseObjects\ModifyUserResponse.py" />
+    <Compile Include="ResponseObjects\__init__.py" />
     <Compile Include="REST.py" />
     <Compile Include="UnitTests.py" />
   </ItemGroup>

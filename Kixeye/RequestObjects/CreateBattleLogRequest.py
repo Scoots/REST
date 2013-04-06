@@ -6,39 +6,19 @@ class CreateBattleLogRequest(object):
   """ Based on its members it will create its own JSON POST parameters """
 
   # Members required for sending a CreateUserRequest
-  m_attacker = None
-  m_defender = None
-  m_winner = None
-  m_startTime = None
-  m_endTime = None
+  attacker = None
+  defender = None
+  winner = None
+  startTime = None
+  endTime = None
 
   def __init__(self, attacker, defender, winner, start, end):
-    self.m_attacker = attacker
-    self.m_defender = defender
-    self.m_winner = winner
-    self.m_startTime = start
-    self.m_endTime = end
+    self.attacker = attacker
+    self.defender = defender
+    self.winner = winner
+    self.start = start
+    self.end = end
 
   def GetJSON(self):
-    print json.dumps(
-                      {
-                        'attacker': self.m_attacker,
-                        'defender': self.m_defender,
-                        'winner': self.m_winner,
-                        'start': self.m_startTime,
-                        'end': self.m_endTime
-                      },
-                      sort_keys=True,
-                      indent=4,
-                      separators=(',', ': '))
-    return json.dumps(
-                      {
-                        'attacker': self.m_attacker,
-                        'defender': self.m_defender,
-                        'winner': self.m_winner,
-                        'start': self.m_startTime,
-                        'end': self.m_endTime
-                      },
-                      sort_keys=True,
-                      indent=4,
-                      separators=(',', ': '))
+    print json.dumps(self.__dict__)
+    return json.dumps(self.__dict__)

@@ -14,6 +14,7 @@ class ModifyUserRequest(object):
     self.m_field = field
     self.m_value = value
 
+  # This function is different because we are supplying a user, but not sending it in the request
   def GetJSON(self):
     print json.dumps(
                       {

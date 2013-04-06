@@ -1,14 +1,13 @@
 from RequestObjects.CreateUserRequest import CreateUserRequest
 from RequestObjects.ModifyUserRequest import ModifyUserRequest
 from RequestObjects.CreateBattleLogRequest import CreateBattleLogRequest
-from RequestObjects.CreateBattleLogRequest2 import CreateBattleLogRequest2
 from ResponseObjects.CreateUserResponse import CreateUserResponse
 from ResponseObjects.ModifyUserResponse import ModifyUserResponse
 from ResponseObjects.CreateBattleLogResponse import CreateBattleLogResponse
 from Backend.DBCommunicator import DBCommunicator
 import json
 
-class REST:
+class API:
   """The API that the user can call to make the requests to send JSON requests"""
 
   __m_authenticated = False
