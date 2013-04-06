@@ -16,14 +16,6 @@ class ModifyUserRequest(object):
 
   # This function is different because we are supplying a user, but not sending it in the request
   def GetJSON(self):
-    print json.dumps(
-                      {
-                        'field': self.m_field,
-                        'value': self.m_value
-                      },
-                      sort_keys=True,
-                      indent=4,
-                      separators=(',', ': '))
     return json.dumps(
                       {
                         'field': self.m_field,

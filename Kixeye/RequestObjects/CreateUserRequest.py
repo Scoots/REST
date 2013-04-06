@@ -15,5 +15,4 @@ class CreateUserRequest(object):
     self.nickname = nick
 
   def GetJSON(self):
-    print json.dumps(self.__dict__)
     return json.dumps(self.__dict__)

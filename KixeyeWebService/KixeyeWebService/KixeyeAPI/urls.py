@@ -1,10 +1,12 @@
 from django.conf.urls import patterns, include, url
 from piston.resource import Resource
+from piston.authentication import HttpBasicAuthentication
 from handlers import CreateUserHandler, ModifyUserHandler, CreateBattleLogHandler
 
-createUserResource = Resource(CreateUserHandler)
-modifyUserResource = Resource(ModifyUserHandler)
-createBattleLogResource = Resource(CreateBattleLogHandler)
+auth = HttpBasicAuthentication(realm="KixeyeRealm")
+createUserResource = Resource(CreateUserHandler, authentication=auth)
+modifyUserResource = Resource(ModifyUserHandler, authentication=auth)
+createBattleLogResource = Resource(CreateBattleLogHandler, authentication=auth)
 
 urlpatterns = patterns( '',
     url(r'^users/$', createUserResource),

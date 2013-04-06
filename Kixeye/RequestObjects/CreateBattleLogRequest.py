@@ -20,5 +20,4 @@ class CreateBattleLogRequest(object):
     self.end = end
 
   def GetJSON(self):
-    print json.dumps(self.__dict__)
     return json.dumps(self.__dict__)

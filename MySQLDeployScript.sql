@@ -83,19 +83,30 @@ END$$
 
 DELIMITER ;
 
-
 USE `kixeye`;
 DROP procedure IF EXISTS `GetUserFromId`;
 
 DELIMITER $$
 USE `kixeye`$$
-CREATE PROCEDURE `kixeye`.`GetUserFromId` (
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetUserFromId`(
 	user_id INT)
 BEGIN
-	SELECT *
+	UPDATE kixeye.user_statistics AS us
+		SET last_seen_time = UTC_TIMESTAMP()
+		WHERE us.user_id = user_id;
+
+	SELECT u.user_id,
+		   u.first_name,
+		   u.last_name,
+		   u.nickname,
+		   u.creation_time,
+		   us.num_wins,
+		   us.num_losses,
+		   us.win_streak,
+		   us.last_seen_time
 	FROM kixeye.user AS u
-		INNER JOIN kixeye.user_statistics AS us
-		ON us.user_id = user_id
+	INNER JOIN kixeye.user_statistics AS us
+		ON us.user_id = u.user_id
 	WHERE u.user_id = user_id;
 END$$
 
@@ -106,17 +117,32 @@ DROP procedure IF EXISTS `GetUserFromNickname`;
 
 DELIMITER $$
 USE `kixeye`$$
-CREATE PROCEDURE `kixeye`.`GetUserFromNickname` (
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetUserFromNickname`(
 	nickname NVARCHAR(45))
 BEGIN
-	SELECT user_id
-		FROM kixeye.user AS u
-		WHERE u.nickname = nickname;
+	UPDATE kixeye.user_statistics AS us
+		INNER JOIN kixeye.user AS u
+			ON u.nickname = nickname
+		SET us.last_seen_time = UTC_TIMESTAMP()
+		WHERE u.user_id = us.user_id;
 
-	-- This won't work with multiple people who have the same nickname
+	SELECT u.user_id,
+		   u.first_name,
+		   u.last_name,
+		   u.nickname,
+		   u.creation_time,
+		   us.num_wins,
+		   us.num_losses,
+		   us.win_streak,
+		   us.last_seen_time
+	FROM kixeye.user AS u
+	INNER JOIN kixeye.user_statistics AS us
+		ON u.user_id = us.user_id
+	WHERE u.nickname = nickname;
 END$$
 
 DELIMITER ;
+
 
 USE `kixeye`;
 DROP procedure IF EXISTS `ModifyUserFirstName`;
@@ -165,4 +191,22 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+USE `kixeye`;
+DROP procedure IF EXISTS `GetBattles`;
+
+DELIMITER $$
+USE `kixeye`$$
+CREATE PROCEDURE `kixeye`.`GetBattles` (
+	start_time DATETIME,
+	end_time DATETIME)
+BEGIN
+	SELECT *
+	FROM kixeye.battle AS b
+	WHERE b.start_time >= start_time
+		AND b.end_time <= end_time;
+END$$
+
+DELIMITER ;
+
 
