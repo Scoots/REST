@@ -62,6 +62,7 @@ Known Issues:
 	- The date for the /battles?start=<start>&end=<end> request must be in YYYY-mm-dd format
 	- The database is not being written to.  I believe django has it's own interpretation of my database, so even though I am calling the stored procedures and getting correct values back, it is not showing the changes in my actual database
 	- Doing a nickname search doesn't redirect you to multiple pages, it simply dumps all of the data for all of the people that matched your query
+	- The nickname search allows you to type /users/s?nickname=<NAME>; As long as there is a letter after /users/ and the final syntax is ?nickname=<NAME> it will work
 	
 Assumptions Made:
 	- All times were supposed to be in UTC and didn't need to worry about timezone conversion

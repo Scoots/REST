@@ -15,7 +15,7 @@ createBattleLogResource = Resource(CreateBattleLogHandler, authentication=auth)
 # regex to differentiate
 urlpatterns = patterns('',
     url(r'^users/$', createUserResource),
-    url(r'^users/(?P<expression>.*)/$', userIdResource),
+    url(r'^users/(?P<expression>.*)$', userIdResource),
     url(r'^battles/$', createBattleLogResource),
     url(r'^battles?(?P<expression>.*)$', views.GetBattles),
 )
