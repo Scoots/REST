@@ -7,7 +7,7 @@ from datetime import datetime
 from django.core.serializers.json import DjangoJSONEncoder
 
 class CreateUserHandler(BaseHandler):
-  allowed_methods = ('POST',)
+  allowed_methods = ('POST', )
 
   def create(self, request):
     response = HttpResponse("", content_type='application/json')
@@ -65,12 +65,56 @@ class CreateUserHandler(BaseHandler):
                       indent=4,
                       separators=(',',': '))
 
-class ModifyUserHandler(BaseHandler):
-  allowed_methods = ('PUT',)
+class UserIdHandler(BaseHandler):
+  allowed_methods = ('PUT', 'GET')
 
-  def modify(self, request, expression):
+  # This should REALLY be in my views, but I was unable to get my regex to match GET without
+  # matching the PUT
+  def read(self, request, expression):
+    # Check if the expression is a user id
+    userId = TryParseInt(expression)
+    if userId is not None:
+      # Go digging through the database to find the appropriate set of data to return
+      cur = connection.cursor()
+      cur.callproc("kixeye.GetUserFromId", [userId,])
+      results = cur.fetchall()
+      cur.close()
+
+      # If we don't have any rows, error
+      if len(results) < 1:
+        return HttpResponse("No rows returned for params {0}".format([userId,]))
+    
+      # Only grab the first row
+      return HttpResponse(results[0])
+
+    # If it isn't an id, see if we are searching by nickname
+    nickname = request.GET.get('nickname')
+    if nickname is not None:
+      # Go digging through the database to find the appropriate set of data to return
+      cur = connection.cursor()
+      cur.callproc("kixeye.GetUserFromNickname", [nickname,])
+      results = cur.fetchall()
+      cur.close()
+
+      # If we don't have any rows, error
+      if len(results) < 1:
+        return HttpResponse("No rows returned for params {0}".format([nickname,]))
+    
+      # Figure out how to redirect
+      # I will need to change my sproc to return the user id instead of all user data
+      return HttpResponse(results)
+
+    return HttpResponse("You're not looking at user_id or nickname")
+
+
+  def update(self, request, expression):
     response = HttpResponse()
     response.content_type = 'application/json'
+
+    userId = TryParseInt(expression)
+    if userId is None:
+      response.write(self.__ModifyUserFailureJSON("ERROR_BAD_USER_ID"))
+      return response
 
     # Get the field that we wish to change, should be the column name
     field = request.data.get('field')
@@ -85,14 +129,14 @@ class ModifyUserHandler(BaseHandler):
       return response
 
     cur = connection.cursor()
-    if field == "first_name":
-      cur.callproc("kixeye.ModifyUserFirstName", [value,])
+    if field == "first":
+      cur.callproc("kixeye.ModifyUserFirstName", [userId, value,])
       cur.close()
-    elif field == "last_name":
-      cur.callproc("kixeye.ModifyUserLastName", [value,])
+    elif field == "last":
+      cur.callproc("kixeye.ModifyUserLastName", [userId, value,])
       cur.close()
     elif field == "nickname":
-      cur.callproc("kixeye.ModifyUserNickname", [value,])
+      cur.callproc("kixeye.ModifyUserNickname", [userId, value,])
       cur.close()
     else:
       cur.close()
@@ -112,7 +156,7 @@ class ModifyUserHandler(BaseHandler):
                       'error': "false",
                       'time': datetime.utcnow(),
                       },
-                      cls=DatetimeEncoder,
+                      cls=DjangoJSONEncoder,
                       sort_keys=True,
                       indent=4,
                       separators=(',',': '))
@@ -124,7 +168,7 @@ class ModifyUserHandler(BaseHandler):
                       'time': datetime.utcnow(),
                       'msg': message
                       },
-                      cls=DatetimeEncoder,
+                      cls=DjangoJSONEncoder,
                       sort_keys=True,
                       indent=4,
                       separators=(',',': '))
@@ -157,7 +201,7 @@ class CreateBattleLogHandler(BaseHandler):
       response.write(self.__AddBattleFailureJSON("ERROR_NO_START"))
       return response
 
-    startTime = self.__TryParseDatetime(start)
+    startTime = TryParseDatetime(start)
     if start is None:
       response.write(self.__AddBattleFailureJSON("ERROR_BAD_START"))
       return response
@@ -167,7 +211,7 @@ class CreateBattleLogHandler(BaseHandler):
       response.write(self.__AddBattleFailureJSON("ERROR_NO_END"))
       return response
 
-    endTime = self.__TryParseDatetime(end)
+    endTime = TryParseDatetime(end)
     if end is None:
       response.write(self.__AddBattleFailureJSON("ERROR_BAD_END"))
       return response
@@ -207,9 +251,16 @@ class CreateBattleLogHandler(BaseHandler):
                       indent=4,
                       separators=(',',': '))
 
-  # Utility function for pulling out datetime values
-  def __TryParseDatetime(self, val, default=None):
-    try:
-      return datetime.strptime(val, "%Y-%m-%d")
-    except ValueError:
-      return default
+# Utility function for pulling out datetime values
+def TryParseDatetime(val, default=None):
+  try:
+    return datetime.strptime(val, "%Y-%m-%d")
+  except Exception:
+    return default
+
+# Utility function for pulling out int values
+def TryParseInt(val, base=10, default=None):
+  try:
+    return int(val, base)
+  except Exception:
+    return default

@@ -13,7 +13,7 @@ class API:
   __m_authenticated = False
 
   # Change this value to wherever the server is running
-  __m_BaseURL = "127.0.0.1:1901"
+  __m_BaseURL = "127.0.0.1:8001"
   __m_proxy = WebServiceProxy(__m_BaseURL)
 
   #-----------------------------------------------------------------------
@@ -38,14 +38,12 @@ class API:
 
     # Check if we are authenticated
     if not self.__m_authenticated:
-      print "ERROR_NOT_AUTHENTICATED"
       errorObj.m_errorDescription = "ERROR_NOT_AUTHENTICATED"
       return errorObj
 
     # Check if we have the appropriate request
     if not type(userRequest) == CreateUserRequest:
       # Log and throw error
-      print "ERROR_INVALID_TYPE"
       errorObj.m_errorDescription = "ERROR_INVALID_TYPE"
       return errorObj
 
@@ -54,15 +52,13 @@ class API:
     headers = {"Content-type": "application/json"}
     
     # Send the JSON request, wait for the response and return it
-    result = self.__m_proxy.SendWebRequest("POST", "/KixeyeAPI/users/", params, headers)
+    result = self.__m_proxy.SendWebRequest("POST", "/users/", params, headers)
 
     if result is None:
-      print "ERROR_FAILED_CONNECTION"
       errorObj.m_errorDescription = "ERROR_FAILED_CONNECTION"
       return errorObj
     
     if not result.status == 200:
-      print "ERROR_{0}_FROM_SERVICE".format(result.status)
       errorObj.m_errorDescription = "ERROR_{0}_FROM_SERVICE".format(result.status)
       return errorObj
 
@@ -79,14 +75,12 @@ class API:
 
     # Check if we are authenticated
     if not self.__m_authenticated:
-      print "ERROR_NOT_AUTHENTICATED"
       errorObj.m_errorDescription = "ERROR_NOT_AUTHENTICATED"
       return errorObj
 
     # Check if we have the appropriate request
     if not type(userRequest) == ModifyUserRequest:
       # Log and throw error
-      print "ERROR_INVALID_TYPE"
       errorObj.m_errorDescription = "ERROR_INVALID_TYPE"
       return errorObj
 
@@ -95,15 +89,13 @@ class API:
     headers = {"Content-type": "application/json"}
 
     # Send the JSON request, wait for the response and return it
-    result = self.__m_proxy.SendWebRequest("PUT", "/KixeyeAPI/users/{0}/".format(userRequest.m_user), params, headers)
+    result = self.__m_proxy.SendWebRequest("PUT", "/users/{0}/".format(userRequest.m_user), params, headers)
 
     if result is None:
-      print "ERROR_FAILED_CONNECTION"
       errorObj.m_errorDescription = "ERROR_FAILED_CONNECTION"
       return errorObj
 
     if not result.status == 200:
-      print "ERROR_{0}_FROM_SERVICE".format(result.status)
       errorObj.m_errorDescription = "ERROR_{0}_FROM_SERVICE".format(result.status)
       return errorObj
     
@@ -120,14 +112,12 @@ class API:
 
     # Check if we are authenticated
     if not self.__m_authenticated:
-      print "ERROR_NOT_AUTHENTICATED"
       errorObj.m_errorDescription = "ERROR_NOT_AUTHENTICATED"
       return errorObj
 
     # Check if we have the appropriate request
     if not type(userRequest) == CreateBattleLogRequest:
       # Log and throw error
-      print "ERROR_INVALID_TYPE"
       errorObj.m_errorDescription = "ERROR_INVALID_TYPE"
       return errorObj
 
@@ -136,10 +126,9 @@ class API:
     headers = {"Content-type": "application/json"}
 
     # Send the JSON request, wait for the response and return it
-    result = self.__m_proxy.SendWebRequest("POST", "/KixeyeAPI/battles/", params, headers)
+    result = self.__m_proxy.SendWebRequest("POST", "/battles/", params, headers)
 
     if result is None:
-      print "ERROR_FAILED_CONNECTION"
       errorObj.m_errorDescription = "ERROR_FAILED_CONNECTION"
       return errorObj
     

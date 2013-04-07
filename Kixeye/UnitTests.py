@@ -35,29 +35,29 @@ api.Connect("shopp", "Password")
 # All fail with incorrect object
 print
 print "All checks below should fail with incorrect object errors"
-api.CreateUser(modifyUserRequest)
-api.CreateUser(createBattleLogRequest)
+print api.CreateUser(modifyUserRequest).m_error
+print api.CreateUser(createBattleLogRequest).m_error
 
-api.ModifyUser(createUserRequest)
-api.ModifyUser(createBattleLogRequest)
+print api.ModifyUser(createUserRequest).m_error
+print api.ModifyUser(createBattleLogRequest).m_error
 
-api.CreateBattleLog(createUserRequest)
-api.CreateBattleLog(modifyUserRequest)
+print api.CreateBattleLog(createUserRequest).m_error
+print api.CreateBattleLog(modifyUserRequest).m_error
 
 # All fail because of invalid request data
 print
 print "All checks below should fail with invalid request data"
 print "They won't actually fail until the website itself fails"
-api.ModifyUser(modifyUserRequest)
+print api.ModifyUser(modifyUserRequest).m_error
 
 # Updating the modify user request data
 modifyUserRequest.m_field = "first"
 
 # All pass
 print
-print "All checks below should pass by printing out their JSON requests"
-api.CreateUser(createUserRequest)
-api.ModifyUser(modifyUserRequest)
-api.CreateBattleLog(createBattleLogRequest)
+print "All checks below should pass by printing out their error (false)"
+print api.CreateUser(createUserRequest).m_error
+print api.ModifyUser(modifyUserRequest).m_error
+print api.CreateBattleLog(createBattleLogRequest).m_error
 
 time.sleep(10)

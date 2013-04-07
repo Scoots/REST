@@ -47,13 +47,22 @@ Database Information:
 		Anything involving an id should be a FK to the user table
 		
 How to Run:
-	You can run the python client unit tests by running UnitTests.py.
+	Start up the web service by running manage.py runserver 8001
+		- This starts up the server running on port 8001, which is where the test client I made is currently pointing
+		- If you want to step through the code as it is running:
+			- Set KixeyeWebService as the startup project
+			- Set manage.py as the start file
+			- Run with F5
+			- Open another Visual Studio, change the startup project to Kixeye and the startup file to UnitTests.py
+			- Update line 16 in API.py to point at the port your server is running on
+			- Set any breakpoints you want, change any values that the functions are calling
+			- Run!
 	
 Known Issues:
-	- ModifyUser not working correctly.  The regular expression in the KixeyeAPI/users.py file is matching my PUT command with my r'^users/$' regular expression, and it doesn't know how to handle it
 	- The date for the /battles?start=<start>&end=<end> request must be in YYYY-mm-dd format
+	- The database is not being written to.  I believe django has it's own interpretation of my database, so even though I am calling the stored procedures and getting correct values back, it is not showing the changes in my actual database
+	- Doing a nickname search doesn't redirect you to multiple pages, it simply dumps all of the data for all of the people that matched your query
 	
 Assumptions Made:
-	- The API should be a separate call from the getters
-		- This allows me to separate views from backend functionality
 	- All times were supposed to be in UTC and didn't need to worry about timezone conversion
+	- The HttpResponse objects for the getters didn't need to be in awesome JSON format

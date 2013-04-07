@@ -35,7 +35,6 @@
   <ItemGroup>
     <Compile Include="KixeyeWebService\KixeyeAPI\handlers.py" />
     <Compile Include="KixeyeWebService\KixeyeAPI\tests.py" />
-    <Compile Include="KixeyeWebService\KixeyeAPI\urls.py" />
     <Compile Include="KixeyeWebService\KixeyeAPI\__init__.py" />
     <Compile Include="KixeyeWebService\models.py" />
     <Compile Include="KixeyeWebService\views.py" />

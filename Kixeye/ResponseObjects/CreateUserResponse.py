@@ -5,7 +5,7 @@ class CreateUserResponse(object):
 
   # These members are for both success and failure cases
   # In the case of success, the m_errorDescription member will be None
-  m_error = True
+  m_error = 'true'
   m_time = None
   m_userId = None
   m_errorDescription = "No JSON supplied"
