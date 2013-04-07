@@ -1,6 +1,6 @@
 from piston.handler import BaseHandler
 from django.http import HttpResponse
-from django.db import connection
+from django.db import connection, transaction
 from KixeyeWebService.models import User
 import json
 from datetime import datetime
@@ -34,11 +34,8 @@ class CreateUserHandler(BaseHandler):
       response.write(self.__CreateUserFailureJSON("ERROR_NO_NICKNAME"))
       return response
 
-    ## Connect to our database and call the sproc
-    cur = connection.cursor()
-    cur.callproc("kixeye.CreateUser", [first, last, nickname,])
-    results = cur.fetchone()
-    cur.close()
+    # Set to None to keep it in scope
+    results = CallSprocFetchOne("kixeye.CreateUser", [first, last, nickname,])
 
     # If we don't have any rows, error
     if len(results) < 2:
@@ -96,11 +93,7 @@ class UserIdHandler(BaseHandler):
     userId = TryParseInt(expression)
     if userId is not None:
       # Go digging through the database to find the appropriate set of data to return
-      cur = connection.cursor()
-      cur.callproc("kixeye.GetUserFromId", [userId,])
-      results = cur.fetchall()
-      cur.close()
-
+      results = CallSprocFetchAll("kixeye.GetUserFromId", [userId,])
       # If we don't have any rows, error
       if len(results) < 1:
         return HttpResponse("No rows returned for params {0}".format([userId,]))
@@ -112,10 +105,7 @@ class UserIdHandler(BaseHandler):
     nickname = request.GET.get('nickname')
     if nickname is not None:
       # Go digging through the database to find the appropriate set of data to return
-      cur = connection.cursor()
-      cur.callproc("kixeye.GetUserFromNickname", [nickname,])
-      results = cur.fetchall()
-      cur.close()
+      results = CallSprocFetchAll("kixeye.GetUserFromNickname", [nickname,])
 
       # If we don't have any rows, error
       if len(results) < 1:
@@ -151,19 +141,15 @@ class UserIdHandler(BaseHandler):
     if value is None:
       response.write(self.__ModifyUserFailureJSON("ERROR_BAD_VALUE"))
       return response
-
-    cur = connection.cursor()
+    
+    ## Connect to our database and call the sproc
     if field == "first":
-      cur.callproc("kixeye.ModifyUserFirstName", [userId, value,])
-      cur.close()
+      CallSprocFetchOne("kixeye.ModifyUserFirstName", [userId, value,])
     elif field == "last":
-      cur.callproc("kixeye.ModifyUserLastName", [userId, value,])
-      cur.close()
+      CallSprocFetchOne("kixeye.ModifyUserLastName", [userId, value,])
     elif field == "nickname":
-      cur.callproc("kixeye.ModifyUserNickname", [userId, value,])
-      cur.close()
+      CallSprocFetchOne("kixeye.ModifyUserNickname", [userId, value,])
     else:
-      cur.close()
       # If none of those are the fields, then the user input is bad
       response.write(self.__ModifyUserFailureJSON("ERROR_BAD_FIELD"))
       return response
@@ -252,11 +238,7 @@ class CreateBattleLogHandler(BaseHandler):
 
     # We got passed all our error checking, send the sproc call!
     params = [attacker, defender, winner, startTime, endTime,]
-
-    ## Connect to our database and call the sproc
-    cur = connection.cursor()
-    cur.callproc("kixeye.AddBattle", params)
-    cur.close()
+    CallSprocFetchOne("kixeye.AddBattle", params)
 
     # Set err, time
     response.write(self.__AddBattleSuccessJSON())
@@ -297,7 +279,7 @@ class CreateBattleLogHandler(BaseHandler):
 def TryParseDatetime(val, default=None):
   try:
     return datetime.strptime(val, "%Y-%m-%d")
-  except Exception:
+  except:
     return default
   
 #-----------------------------------------------------------------------
@@ -306,5 +288,43 @@ def TryParseDatetime(val, default=None):
 def TryParseInt(val, base=10, default=None):
   try:
     return int(val, base)
-  except Exception:
+  except:
     return default
+
+#-----------------------------------------------------------------------
+# Allows django to commit into our database immediately
+#-----------------------------------------------------------------------
+@transaction.commit_manually
+def CallSprocFetchOne(function, params):
+  results = None
+  try:
+    ## Connect to our database and call the sproc
+    cur = connection.cursor()
+    cur.callproc(function, params)
+    results = cur.fetchone()
+    cur.close()
+  except:
+    transaction.rollback()
+    return results
+  else:
+    transaction.commit()
+    return results
+
+#-----------------------------------------------------------------------
+# Allows django to commit into our database immediately
+#-----------------------------------------------------------------------
+@transaction.commit_manually
+def CallSprocFetchAll(function, params):
+  results = ()
+  try:
+    ## Connect to our database and call the sproc
+    cur = connection.cursor()
+    cur.callproc(function, params)
+    results = cur.fetchall()
+    cur.close()
+  except:
+    transaction.rollback()
+    return results
+  else:
+    transaction.commit()
+    return results

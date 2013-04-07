@@ -29,7 +29,7 @@ def GetBattles(request, expression):
 def __TryParseInt(val, base=10, default=None):
   try:
     return int(val, base)
-  except Exception:
+  except:
     return default
   
 #-----------------------------------------------------------------------
@@ -38,7 +38,7 @@ def __TryParseInt(val, base=10, default=None):
 def __TryParseDatetime(val, default=None):
   try:
     return datetime.strptime(val, "%Y-%m-%d")
-  except Exception:
+  except:
     return default
   
 #-----------------------------------------------------------------------
