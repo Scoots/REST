@@ -47,9 +47,13 @@ Database Information:
 		Anything involving an id should be a FK to the user table
 		
 How to Run:
-	You can run the python client unit tests by running UnitTests.py.  It is very rudimentary and was just meant to test the communcation when sending the HttpRequest objects.  Since I never got this working, the layer is largely unfinished.
+	You can run the python client unit tests by running UnitTests.py.
 	
 Known Issues:
-	- Error 400 received on all requests sent to the KixeyeAPI URL
-	- No username/password authentication on API calls
+	- ModifyUser not working correctly.  The regular expression in the KixeyeAPI/users.py file is matching my PUT command with my r'^users/$' regular expression, and it doesn't know how to handle it
 	- The date for the /battles?start=<start>&end=<end> request must be in YYYY-mm-dd format
+	
+Assumptions Made:
+	- The API should be a separate call from the getters
+		- This allows me to separate views from backend functionality
+	- All times were supposed to be in UTC and didn't need to worry about timezone conversion

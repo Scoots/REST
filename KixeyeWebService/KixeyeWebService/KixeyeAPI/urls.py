@@ -3,13 +3,13 @@ from piston.resource import Resource
 from piston.authentication import HttpBasicAuthentication
 from handlers import CreateUserHandler, ModifyUserHandler, CreateBattleLogHandler
 
-auth = HttpBasicAuthentication(realm="KixeyeRealm")
+auth = None #HttpBasicAuthentication(realm="KixeyeRealm")
 createUserResource = Resource(CreateUserHandler, authentication=auth)
 modifyUserResource = Resource(ModifyUserHandler, authentication=auth)
 createBattleLogResource = Resource(CreateBattleLogHandler, authentication=auth)
 
 urlpatterns = patterns( '',
     url(r'^users/$', createUserResource),
-    url(r'^users/(?P<expression>.*)$', modifyUserResource),
-    url(r'^battles/(?P<expression>.*)$', createBattleLogResource),
+    url(r'^users/(?P<expression>[0-9]*)$', modifyUserResource),
+    url(r'^battles/$', createBattleLogResource),
 )

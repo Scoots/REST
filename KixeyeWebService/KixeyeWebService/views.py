@@ -20,8 +20,7 @@ def GetUser(request, expression):
       return HttpResponse("No rows returned for params {0}".format([userId,]))
     
     # Only grab the first row
-    user = User(results[0])
-    return HttpResponse(results)
+    return HttpResponse(results[0])
 
   # If it isn't an id, see if we are searching by nickname
   nickname = request.GET.get('nickname')
@@ -35,8 +34,7 @@ def GetUser(request, expression):
     
     # Figure out how to redirect
     # I will need to change my sproc to return the user id instead of all user data
-    user = User(results[0])
-    return HttpResponse(results.ToString())
+    return HttpResponse(results)
 
   return HttpResponse("You're not looking at user_id or nickname")
 

@@ -26,7 +26,6 @@ CREATE  TABLE `KIXEYE`.`BATTLE` (
   `end_time` DATETIME NOT NULL )
 COMMENT = 'Stores battle data instance.  The attacker, defender, and winner ids all relate to the USER table.  Any addition to this table should modify the USER_STATISTICS table, incrementing num_wins, num_losses, win_streak';
 
-
 USE `kixeye`;
 DROP procedure IF EXISTS `CreateUser`;
 
@@ -37,16 +36,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `CreateUser`(
 	last_name varchar(45),
 	nickname varchar(45))
 BEGIN
+	SET @now = UTC_TIMESTAMP();
 	INSERT INTO kixeye.user(first_name, last_name, nickname, creation_time)
-		VALUES (first_name, last_name, nickname, UTC_TIMESTAMP());
+		VALUES (first_name, last_name, nickname, @now);
 
 	SET @newId = LAST_INSERT_ID();
 
 	INSERT INTO kixeye.user_statistics(user_id, num_wins, num_losses, win_streak)
 		VALUES (@newId, 0, 0, 0);
+
+	-- Return the new id and the timestamp
+	SELECT @newId, @now;
 END$$
 
 DELIMITER ;
+
 
 USE `kixeye`;
 DROP procedure IF EXISTS `AddBattle`;

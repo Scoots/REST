@@ -13,7 +13,7 @@ class API:
   __m_authenticated = False
 
   # Change this value to wherever the server is running
-  __m_BaseURL = "127.0.0.1:8001"
+  __m_BaseURL = "127.0.0.1:1901"
   __m_proxy = WebServiceProxy(__m_BaseURL)
 
   #-----------------------------------------------------------------------
@@ -67,7 +67,7 @@ class API:
       return errorObj
 
     # Return the response object
-    return CreateUserResponse(result)
+    return CreateUserResponse(result.read())
 
   #-----------------------------------------------------------------------
   # CreateUser function
@@ -95,7 +95,7 @@ class API:
     headers = {"Content-type": "application/json"}
 
     # Send the JSON request, wait for the response and return it
-    result = self.__m_proxy.SendWebRequest("POST", "/KixeyeAPI/users/", params, headers)
+    result = self.__m_proxy.SendWebRequest("PUT", "/KixeyeAPI/users/{0}/".format(userRequest.m_user), params, headers)
 
     if result is None:
       print "ERROR_FAILED_CONNECTION"
@@ -108,7 +108,7 @@ class API:
       return errorObj
     
     # Return the response object
-    return ModifyUserResponse(result)
+    return ModifyUserResponse(result.read())
   
   #-----------------------------------------------------------------------
   # CreateBattleLog function
@@ -149,4 +149,4 @@ class API:
       return errorObj
 
     # Return the response object
-    return CreateBattleLogResponse(result)
+    return CreateBattleLogResponse(result.read())
