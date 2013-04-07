@@ -18,6 +18,9 @@ class API:
 
   #-----------------------------------------------------------------------
   # Fake connect function
+  # I haven't fully tested the web auth stuff, this was my hack to
+  # 'pretend' I was forcing authentication.  I realize it is very different
+  # on the web service.  It should be enabled, but again, largely untested
   #-----------------------------------------------------------------------
   def Connect(self, name, password):
     if self.__m_authenticated:

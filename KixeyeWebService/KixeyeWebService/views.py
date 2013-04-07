@@ -3,7 +3,9 @@ from django.db import connection
 from models import User
 from datetime import datetime
 
-# My view for looking at battles
+#-----------------------------------------------------------------------
+# View for looking at battles
+#-----------------------------------------------------------------------
 def GetBattles(request, expression):
   # Go digging through the database to find the appropriate data set
   start = request.GET.get('start')
@@ -21,20 +23,27 @@ def GetBattles(request, expression):
 
   return HttpResponse(results)
 
+#-----------------------------------------------------------------------
 # Utility function for pulling out int values
+#-----------------------------------------------------------------------
 def __TryParseInt(val, base=10, default=None):
   try:
     return int(val, base)
   except Exception:
     return default
-
+  
+#-----------------------------------------------------------------------
 # Utility function for pulling out datetime values
+#-----------------------------------------------------------------------
 def __TryParseDatetime(val, default=None):
   try:
     return datetime.strptime(val, "%Y-%m-%d")
   except Exception:
     return default
-
+  
+#-----------------------------------------------------------------------
+# Calls stored procedures in our default database
+#-----------------------------------------------------------------------
 def __CallSproc(sprocName, params):
   ## Connect to our database and call the sproc
   cur = connection.cursor()

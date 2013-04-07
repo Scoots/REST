@@ -11,7 +11,7 @@ class CreateUserResponse(object):
   m_errorDescription = "No JSON supplied"
 
   def __init__(self, JSONStr = ""):
-    # In this case we made this object to report an error from the DLL
+    # In this case we made this object to report an error
     if JSONStr == "":
       return
 

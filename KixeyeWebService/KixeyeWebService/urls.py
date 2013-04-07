@@ -9,6 +9,10 @@ createUserResource = Resource(CreateUserHandler, authentication=auth)
 userIdResource = Resource(UserIdHandler, authentication=auth)
 createBattleLogResource = Resource(CreateBattleLogHandler, authentication=auth)
 
+# Puts the patterns necessary for our POST, PUT, and GET requests
+# Generally I would like my GETs to go through my view, but I
+# added a GET call to the userIdHandler, since it is too similar for my
+# regex to differentiate
 urlpatterns = patterns('',
     url(r'^users/$', createUserResource),
     url(r'^users/(?P<expression>.*)/$', userIdResource),

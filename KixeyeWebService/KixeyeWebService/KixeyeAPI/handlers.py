@@ -6,10 +6,17 @@ import json
 from datetime import datetime
 from django.core.serializers.json import DjangoJSONEncoder
 
+#-----------------------------------------------------------------------
+# Handler for when the CreateUser POST is called
+#-----------------------------------------------------------------------
 class CreateUserHandler(BaseHandler):
   allowed_methods = ('POST', )
-
+  
+  #-----------------------------------------------------------------------
+  # Create function, called when POST is sent
+  #-----------------------------------------------------------------------
   def create(self, request):
+    # Creates an initial response and does error checking
     response = HttpResponse("", content_type='application/json')
 
     first = request.data.get('first')
@@ -24,7 +31,6 @@ class CreateUserHandler(BaseHandler):
 
     nickname = request.data.get('nickname')
     if nickname is None:
-      # Set err, time, message
       response.write(self.__CreateUserFailureJSON("ERROR_NO_NICKNAME"))
       return response
 
@@ -39,10 +45,14 @@ class CreateUserHandler(BaseHandler):
       response.write(self.__CreateUserFailureJSON("ERROR_INVALID_MYSQL_RETURN"))
       return response
 
-    # Set err, time, userid
+    # Otherwise, success!
     response.write(self.__CreateUserSuccessJSON(results[0], results[1]))
     return response
 
+  
+  #-----------------------------------------------------------------------
+  # Helper function for writing success JSON for the CreateUser call
+  #-----------------------------------------------------------------------
   def __CreateUserSuccessJSON(self, userid, time):
     return json.dumps(
                       {
@@ -53,7 +63,10 @@ class CreateUserHandler(BaseHandler):
                       sort_keys=True,
                       indent=4,
                       separators=(',',': '))
-
+  
+  #-----------------------------------------------------------------------
+  # Helper function for writing failure JSON for the CreateUser call
+  #-----------------------------------------------------------------------
   def __CreateUserFailureJSON(self, message, time):
     return json.dumps(
                       {
@@ -64,12 +77,20 @@ class CreateUserHandler(BaseHandler):
                       sort_keys=True,
                       indent=4,
                       separators=(',',': '))
+  
 
+#-----------------------------------------------------------------------
+# Handler for when ModifyUser POST or GET is called
+# I really want the GET in my views.py file
+#-----------------------------------------------------------------------
 class UserIdHandler(BaseHandler):
   allowed_methods = ('PUT', 'GET')
-
+  
+  #-----------------------------------------------------------------------
+  # Read is called when GET is sent to this handler
   # This should REALLY be in my views, but I was unable to get my regex to match GET without
   # matching the PUT
+  #-----------------------------------------------------------------------
   def read(self, request, expression):
     # Check if the expression is a user id
     userId = TryParseInt(expression)
@@ -106,11 +127,14 @@ class UserIdHandler(BaseHandler):
 
     return HttpResponse("You're not looking at user_id or nickname")
 
-
+  #-----------------------------------------------------------------------
+  # Update is called when PUT is sent to this handler
+  #-----------------------------------------------------------------------
   def update(self, request, expression):
     response = HttpResponse()
     response.content_type = 'application/json'
 
+    # Get the id of the person we are modifying
     userId = TryParseInt(expression)
     if userId is None:
       response.write(self.__ModifyUserFailureJSON("ERROR_BAD_USER_ID"))
@@ -141,15 +165,16 @@ class UserIdHandler(BaseHandler):
     else:
       cur.close()
       # If none of those are the fields, then the user input is bad
-      # Need to return a failure JSON response
-      # Set response.content to the json
       response.write(self.__ModifyUserFailureJSON("ERROR_BAD_FIELD"))
       return response
 
     # Set response.content to the json
     response.write(self.__ModifyUserSuccessJSON())
     return response
-
+  
+  #-----------------------------------------------------------------------
+  # Helper function for writing success JSON for the ModifyUser call
+  #-----------------------------------------------------------------------
   def __ModifyUserSuccessJSON(self):
     return json.dumps(
                       {
@@ -160,7 +185,10 @@ class UserIdHandler(BaseHandler):
                       sort_keys=True,
                       indent=4,
                       separators=(',',': '))
-
+  
+  #-----------------------------------------------------------------------
+  # Helper function for writing failure JSON for the ModifyUser call
+  #-----------------------------------------------------------------------
   def __ModifyUserFailureJSON(self, message):
     return json.dumps(
                       {
@@ -173,10 +201,16 @@ class UserIdHandler(BaseHandler):
                       indent=4,
                       separators=(',',': '))
     
-
+  
+#-----------------------------------------------------------------------
+# Handler for when the CreateBattleLog POST is called
+#-----------------------------------------------------------------------
 class CreateBattleLogHandler(BaseHandler):
   allowed_methods = ('POST',)
-
+  
+  #-----------------------------------------------------------------------
+  # Create is called when POST is sent to this handler
+  #-----------------------------------------------------------------------
   def create(self, request):
     response = HttpResponse("", content_type='application/json')
 
@@ -227,7 +261,10 @@ class CreateBattleLogHandler(BaseHandler):
     # Set err, time
     response.write(self.__AddBattleSuccessJSON())
     return response
-
+  
+  #-----------------------------------------------------------------------
+  # Helper function for writing success JSON for the AddBattle call
+  #-----------------------------------------------------------------------
   def __AddBattleSuccessJSON(self):
     return json.dumps(
                       {
@@ -238,7 +275,10 @@ class CreateBattleLogHandler(BaseHandler):
                       sort_keys=True,
                       indent=4,
                       separators=(',',': '))
-
+  
+  #-----------------------------------------------------------------------
+  # Helper function for writing failure JSON for the AddBattle call
+  #-----------------------------------------------------------------------
   def __AddBattleFailureJSON(self, message):
     return json.dumps(
                       {
@@ -250,15 +290,19 @@ class CreateBattleLogHandler(BaseHandler):
                       sort_keys=True,
                       indent=4,
                       separators=(',',': '))
-
+  
+#-----------------------------------------------------------------------
 # Utility function for pulling out datetime values
+#-----------------------------------------------------------------------
 def TryParseDatetime(val, default=None):
   try:
     return datetime.strptime(val, "%Y-%m-%d")
   except Exception:
     return default
-
+  
+#-----------------------------------------------------------------------
 # Utility function for pulling out int values
+#-----------------------------------------------------------------------
 def TryParseInt(val, base=10, default=None):
   try:
     return int(val, base)
